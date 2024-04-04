@@ -4,10 +4,11 @@ import './loginForm.css'; // Import CSS file
 import { useNavigate } from 'react-router-dom';
 
 export const LoginForm = () => {
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('user');
+  const [error, setError] = useState(null);
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleUsernameChange = (event) => {
@@ -24,7 +25,14 @@ const navigate = useNavigate()
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate('/posts')
+
+    if(username.length > 0 && password.length > 0){
+      navigate('/posts')
+    }else{
+      setTimeout(() => {
+       setError('All fields are required.')
+      }, 500)
+    }
   };
 
   const handleRememberMeChange = (event) => {
@@ -33,7 +41,8 @@ const navigate = useNavigate()
 
   return (
     <div id="loginFormdiv">
-    <h2>Login Form</h2>    
+    <h2>Login Form</h2>
+    {error && <h5 className="error-msg">{error}</h5>}    
     <form role="form" className="login-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="username">Username:</label>

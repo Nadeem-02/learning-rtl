@@ -1,6 +1,8 @@
 import React from "react";
 import { render , screen, fireEvent} from "@testing-library/react";
 import {LoginForm} from './loginform'
+import userEvent from '@testing-library/user-event'
+
 
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -50,6 +52,20 @@ describe("Login Form", () => {
         expect(rememberMeFlag).not.toBeChecked()
         fireEvent.click(rememberMeFlag)
         expect(rememberMeFlag).toBeChecked()
+     })
+
+     it('should show error when we submit the form without filling values', async () => {
+        const handleSubmitMock = jest.fn()
+
+        render( <LoginForm/>)
+
+        const loginEle = screen.getByRole('button', {name: 'Login'})
+        await userEvent.click(loginEle)
+
+        const errorEle = await screen.findByRole('heading', {level: 5})
+        expect(errorEle).toHaveTextContent('All fields are required.')
+        mockedUsedNavigate.mockRestore();
+
      })
 
      it('should call handleSubmit function when we submit the form', () => {
